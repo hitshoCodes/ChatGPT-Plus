@@ -14,6 +14,18 @@ function checkAndApplyModifications() {
     }
   }
 
+  function removeUpgradeToPlusButton() {
+    const elementsToRemove = document.querySelectorAll('.mt-2');
+
+    elementsToRemove.forEach((element) => {
+      const hasButtonStructure = element.querySelector('button.btn-primary');
+
+      if (hasButtonStructure) {
+        element.remove();
+      }
+    });
+  }
+
   function updateHeaderText() {
     const originalElement = document.querySelector('.text-4xl.font-semibold.text-center.text-gray-200.dark\\:text-gray-600.ml-auto.mr-auto.mb-10.sm\\:mb-16.flex.gap-2.items-center.justify-center.flex-grow');
 
@@ -73,6 +85,7 @@ function checkAndApplyModifications() {
   updateHeaderChatModel();
   removeSvgElement();
   updateHeaderText();
+  removeUpgradeToPlusButton();
 }
 
-setInterval(checkAndApplyModifications, 100);
+setInterval(checkAndApplyModifications, 10);
