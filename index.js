@@ -1,4 +1,3 @@
-// Define CSS selectors for elements
 const SELECTORS = {
   UPGRADE_BUTTON: ".flex.px-3.py-1.items-center.gap-3.transition-colors.duration-200.cursor-pointer.text-sm.rounded-md",
   HEADER_CHAT_MODEL: ".flex.flex-1.flex-grow.items-center.gap-1.px-2.py-1.text-gray-600.dark\\:text-gray-200.sm\\:justify-center.sm\\:p-0",
@@ -6,63 +5,74 @@ const SELECTORS = {
   SEND_BUTTON: ".absolute.p-1.rounded-md.right-2.disabled\\:text-gray-400, .enabled\\:bg-brand-purple.text-white.transition-colors.disabled\\:opacity-40",
 };
 
-// Function to remove the "Upgrade to Plus" button
-function removeUpgradeButton() {
-  const upgradeToPlusButton = document.querySelectorAll(SELECTORS.UPGRADE_BUTTON)[2];
+function checkAndApplyModifications() {
+  function removeSvgElement() {
+    const svgElement = document.querySelector('svg[viewBox="0 0 24 24"][fill="currentColor"][aria-hidden="true"][class^="icon-sm"]');
 
-  if (upgradeToPlusButton && upgradeToPlusButton.textContent === "Upgrade to Plus") {
-    upgradeToPlusButton.remove();
-  }
-}
-
-// Function to update the chat model in the header
-function updateHeaderChatModel() {
-  const headerSpan = document.querySelector(SELECTORS.HEADER_CHAT_MODEL);
-
-  if (headerSpan) {
-    const modelText = headerSpan.children[0].textContent;
-    if (modelText === "Default (GPT-3.5)") {
-      headerSpan.children[0].textContent = "Default (GPT-4)";
+    if (svgElement) {
+      svgElement.remove();
     }
   }
-}
 
-// Function to update chat GPT icons
-function updateChatGptIcons() {
-  const chatGptIcons = document.querySelectorAll(SELECTORS.CHAT_GPT_ICONS);
+  function updateHeaderText() {
+    const originalElement = document.querySelector('.text-4xl.font-semibold.text-center.text-gray-200.dark\\:text-gray-600.ml-auto.mr-auto.mb-10.sm\\:mb-16.flex.gap-2.items-center.justify-center.flex-grow');
 
-  chatGptIcons.forEach((icon) => {
-    icon.style.backgroundColor = "#715fde";
-  });
-}
+    if (originalElement && !originalElement.classList.contains('header-updated')) {
+      const plusSpan = document.createElement('span');
+      plusSpan.className = 'rounded-md bg-yellow-200 px-1.5 py-0.5 text-xl font-semibold uppercase text-gray-800';
+      plusSpan.textContent = 'PLUS';
 
-// Function to change the button background color
-function changeButtonBackgroundColor() {
-  const button = document.querySelector(SELECTORS.SEND_BUTTON);
+      originalElement.appendChild(document.createTextNode(' '));
+      originalElement.appendChild(plusSpan);
 
-  if (button) {
-    const style = button.getAttribute("style");
-    if (style && style.includes("background-color")) {
-      button.style.backgroundColor = "#715fde";
+      originalElement.classList.add('header-updated');
     }
   }
-}
 
-// Function to handle mutations
-function handleMutations() {
+  function removeUpgradeButton() {
+    const upgradeToPlusButton = document.querySelectorAll(SELECTORS.UPGRADE_BUTTON)[2];
+
+    if (upgradeToPlusButton && upgradeToPlusButton.textContent === "Upgrade to Plus") {
+      upgradeToPlusButton.remove();
+    }
+  }
+
+  function updateHeaderChatModel() {
+    const headerSpan = document.querySelector(SELECTORS.HEADER_CHAT_MODEL);
+
+    if (headerSpan) {
+      const modelText = headerSpan.children[0].textContent;
+      if (modelText === "Default (GPT-3.5)") {
+        headerSpan.children[0].textContent = "Default (GPT-4)";
+      }
+    }
+  }
+
+  function updateChatGptIcons() {
+    const chatGptIcons = document.querySelectorAll(SELECTORS.CHAT_GPT_ICONS);
+
+    chatGptIcons.forEach((icon) => {
+      icon.style.backgroundColor = "#715fde";
+    });
+  }
+
+  function changeButtonBackgroundColor() {
+    const button = document.querySelector(SELECTORS.SEND_BUTTON);
+
+    if (button) {
+      const style = button.getAttribute("style");
+      if (style && style.includes("background-color")) {
+        button.style.backgroundColor = "#715fde";
+      }
+    }
+  }
+
   removeUpgradeButton();
   changeButtonBackgroundColor();
   updateChatGptIcons();
   updateHeaderChatModel();
+  removeSvgElement();
+  updateHeaderText();
 }
 
-// Create a MutationObserver to watch for changes
-const observer = new MutationObserver(handleMutations);
-observer.observe(document.body, { childList: true, subtree: true });
-
-// Check if the document is already loaded
-if (document.readyState !== "loading") {
-  handleMutations();
-} else {
-  document.addEventListener("DOMContentLoaded", handleMutations);
-}
+setInterval(checkAndApplyModifications, 100);
