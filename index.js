@@ -1,8 +1,7 @@
 const SELECTORS = {
-  UPGRADE_BUTTON: ".flex.px-3.py-1.items-center.gap-3.transition-colors.duration-200.cursor-pointer.text-sm.rounded-md",
-  HEADER_CHAT_MODEL: ".flex.flex-1.flex-grow.items-center.gap-1.px-2.py-1.text-gray-600.dark\\:text-gray-200.sm\\:justify-center.sm\\:p-0",
+  UPGRADE_BUTTON: ".flex.w-full.flex-row.flex-wrap-reverse.justify-between",
+  HEADER_CHAT_MODEL: ".group .text-token-text-secondary",
   CHAT_GPT_ICONS: ".relative.p-1.rounded-sm.text-white.flex.items-center",
-  SEND_BUTTON: ".absolute.p-1.rounded-md.right-2.disabled\\:text-gray-400, .enabled\\:bg-brand-purple.text-white.transition-colors.disabled\\:opacity-40",
 };
 
 function checkAndApplyModifications() {
@@ -14,51 +13,20 @@ function checkAndApplyModifications() {
     }
   }
 
-  function removeUpgradeToPlusButton() {
-    const elementsToRemove = document.querySelectorAll('.mt-2');
+function removeUpgrade() {
+  const elementsToRemove = document.querySelectorAll(SELECTORS.UPGRADE_BUTTON);
+  elementsToRemove.forEach((element) => {
+    element.remove();
+  });
+}
 
-    elementsToRemove.forEach((element) => {
-      const hasButtonStructure = element.querySelector('button.btn-primary');
+function updateHeaderChatModel() {
+  const textElement = document.querySelector(SELECTORS.HEADER_CHAT_MODEL);
 
-      if (hasButtonStructure) {
-        element.remove();
-      }
-    });
+  if (textElement) {
+    textElement.textContent = "4";
   }
-
-  function updateHeaderText() {
-    const originalElement = document.querySelector('.text-4xl.font-semibold.text-center.text-gray-200.dark\\:text-gray-600.ml-auto.mr-auto.mb-10.sm\\:mb-16.flex.gap-2.items-center.justify-center.flex-grow');
-
-    if (originalElement && !originalElement.classList.contains('header-updated')) {
-      const plusSpan = document.createElement('span');
-      plusSpan.className = 'rounded-md bg-yellow-200 px-1.5 py-0.5 text-xl font-semibold uppercase text-gray-800';
-      plusSpan.textContent = 'PLUS';
-
-      originalElement.appendChild(document.createTextNode(' '));
-      originalElement.appendChild(plusSpan);
-
-      originalElement.classList.add('header-updated');
-    }
-  }
-
-  function removeUpgradeButton() {
-    const upgradeToPlusButton = document.querySelectorAll(SELECTORS.UPGRADE_BUTTON)[2];
-
-    if (upgradeToPlusButton && upgradeToPlusButton.textContent === "Upgrade to Plus") {
-      upgradeToPlusButton.remove();
-    }
-  }
-
-  function updateHeaderChatModel() {
-    const headerSpan = document.querySelector(SELECTORS.HEADER_CHAT_MODEL);
-
-    if (headerSpan) {
-      const modelText = headerSpan.children[0].textContent;
-      if (modelText === "Default (GPT-3.5)") {
-        headerSpan.children[0].textContent = "Default (GPT-4)";
-      }
-    }
-  }
+}
 
   function updateChatGptIcons() {
     const chatGptIcons = document.querySelectorAll(SELECTORS.CHAT_GPT_ICONS);
@@ -68,24 +36,9 @@ function checkAndApplyModifications() {
     });
   }
 
-  function changeButtonBackgroundColor() {
-    const button = document.querySelector(SELECTORS.SEND_BUTTON);
-
-    if (button) {
-      const style = button.getAttribute("style");
-      if (style && style.includes("background-color")) {
-        button.style.backgroundColor = "#715fde";
-      }
-    }
-  }
-
-  removeUpgradeButton();
-  changeButtonBackgroundColor();
-  updateChatGptIcons();
+  removeUpgrade();
   updateHeaderChatModel();
-  removeSvgElement();
-  updateHeaderText();
-  removeUpgradeToPlusButton();
+  updateChatGptIcons();
 }
 
 setInterval(checkAndApplyModifications, 10);
